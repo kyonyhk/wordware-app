@@ -147,10 +147,10 @@ export const PromptSectionProvider: React.FC<{ children: ReactNode }> = ({
             component.type === 'prompt' &&
             !newPromptContents[currentFlow.id][component.id]
           ) {
-            newPromptContents[currentFlow.id][component.id] =
-              component.promptContents || [
-                { id: `${Date.now()}`, type: 'text', content: [''] },
-              ];
+            newPromptContents[currentFlow.id][component.id] = (component as any)
+              .promptContents || [
+              { id: `${Date.now()}`, type: 'text', content: [''] },
+            ];
           }
         });
         return newPromptContents;
@@ -261,7 +261,10 @@ export const PromptSectionProvider: React.FC<{ children: ReactNode }> = ({
     description: string;
     type: string;
   }) => {
-    addInputToPromptSection(input);
+    addInputToPromptSection({
+      ...input,
+      requiredInputId: uuidv4(), // Add this line
+    });
     closeInputDropdown();
   };
 
@@ -361,7 +364,7 @@ export const PromptSectionProvider: React.FC<{ children: ReactNode }> = ({
       } else if (
         (event.key === 'ArrowUp' && index > 0) ||
         (event.key === 'ArrowDown' &&
-          index < (promptContents[componentId]?.length || 0) - 1)
+          index < (promptContents[flowId]?.[componentId]?.length || 0) - 1)
       ) {
         event.preventDefault();
         const targetIndex = event.key === 'ArrowUp' ? index - 1 : index + 1;

@@ -12,6 +12,13 @@ import { PromptSection, FlowSection } from '@/components/molecules';
 import { Flow as FlowType } from '../components/organisms';
 import { v4 as uuidv4 } from 'uuid';
 
+// Add this type definition at the top of the file, after the imports
+type OutputType = {
+  name: string;
+  model: string;
+  generationType?: string;
+};
+
 interface FlowContextType {
   flows: FlowType[];
   currentFlow: FlowType | undefined;
@@ -29,7 +36,7 @@ interface FlowContextType {
   handleActiveSectionChange: (sectionId: string, sectionType: string) => void;
   updateFinalOutput: (flowId: string, name: string, model: string) => void;
   setFocusedSection: (sectionId: string, sectionType: string) => void;
-  deleteComponent: (componentId: string) => void;
+  deleteComponent: (flowId: string, componentId: string) => void;
   deleteFlow: (flowId: string) => void;
   handleAddFlow: (isMainFlow: boolean) => void;
   addFlowSection: (flowData: any) => void;
@@ -215,7 +222,7 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({
               component.id === componentId
                 ? {
                     ...component,
-                    output: { name, generationType, label, model },
+                    output: { name, generationType, model } as OutputType,
                   }
                 : component
             );
@@ -227,7 +234,9 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({
             return {
               ...flow,
               components: updatedComponents,
-              finalOutput: isLastComponent ? { name, model } : flow.finalOutput,
+              finalOutput: isLastComponent
+                ? ({ name, model, generationType } as OutputType)
+                : flow.finalOutput,
             };
           }
           return flow;
@@ -299,13 +308,29 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({
               type: 'flow',
               name: flowData.name,
               description: flowData.description,
+              component: (
+                <FlowSection
+                  isActive={false}
+                  isFocused={false}
+                  onDelete={() => {}}
+                  onFocus={() => {}}
+                  component={{
+                    id: uuidv4(),
+                    type: 'flow',
+                    name: flowData.name,
+                    description: flowData.description,
+                    requiredInputs: flowData.requiredInputs,
+                    output: (flowData.finalOutput as OutputType) || {},
+                  }}
+                />
+              ),
               requiredInputs: Array.isArray(flowData.requiredInputs)
                 ? flowData.requiredInputs.map((input: any) => ({
                     ...input,
                     requiredInputId: uuidv4(),
                   }))
                 : [],
-              output: flowData.finalOutput || undefined,
+              output: (flowData.finalOutput as OutputType) || {},
             };
             console.log('New flow section created:', newFlowSection);
 
@@ -328,7 +353,7 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({
 
   useEffect(() => {
     // Initialize with your default flow
-    const initialFlow = {
+    const initialFlow: FlowType = {
       id: 'flow1',
       name: 'Gordon Ramsay Roast 🍝🤬',
       description: 'A flow for Gordon Ramsay to review food',
@@ -345,7 +370,15 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({
           type: 'prompt',
           name: '',
           description: '',
-          component: <PromptSection isActive={false} componentId="prompt1" />,
+          component: (
+            <PromptSection
+              isActive={false}
+              componentId="prompt1"
+              isFocused={false}
+              onDelete={() => {}}
+              onFocus={() => {}}
+            />
+          ),
           requiredInputs: [],
           output: {},
         },
@@ -358,11 +391,15 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({
           component: (
             <FlowSection
               isActive={false}
-              subFlowName="Description → Roast 🔥"
-              subFlowDescription="This prompt takes the description that was generated from the image and turns it into a roast"
+              isFocused={false}
+              onDelete={() => {}}
+              onFocus={() => {}}
               component={{
                 id: 'flow1',
                 type: 'flow',
+                name: 'Description → Roast 🔥',
+                description:
+                  'This prompt takes the description that was generated from the image and turns it into a roast',
                 requiredInputs: [
                   {
                     requiredInputId: '123',
@@ -371,6 +408,11 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({
                     type: 'Long Text',
                   },
                 ],
+                output: {
+                  name: 'Review',
+                  generationType: 'Full',
+                  model: 'Mistral 7B',
+                },
               }}
             />
           ),
@@ -385,7 +427,7 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({
           output: {
             name: 'Review',
             generationType: 'Full',
-            model: 'Mistral 7B ',
+            model: 'Mistral 7B',
           },
         },
         {
@@ -397,21 +439,21 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({
           component: (
             <FlowSection
               isActive={false}
-              subFlowName="ElevenLabs Speech Synthesis 🙊"
-              subFlowDescription="Generates speech from the passed-in text using ElevenLabs"
+              isFocused={false}
+              onDelete={() => {}}
+              onFocus={() => {}}
               component={{
                 id: 'flow2',
                 type: 'flow',
+                name: 'ElevenLabs Speech Synthesis 🙊',
+                description:
+                  'Generates speech from the passed-in text using ElevenLabs',
                 requiredInputs: [
                   {
                     requiredInputId: '124',
                     name: 'Content',
                     description: 'Text to be converted to speech',
                     type: 'Text',
-                    selectedInput: {
-                      name: 'Review',
-                      parentComponent: 'Description → Roast 🔥',
-                    },
                   },
                   {
                     requiredInputId: '125',
@@ -420,8 +462,12 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({
                     type: 'Text',
                   },
                 ],
+                output: {
+                  name: 'GORDON RAMSAY ROAST AUDIO',
+                  generationType: 'Full',
+                  model: 'ELEVENLABS',
+                },
               }}
-              openAddGenerationModal={() => {}}
             />
           ),
           requiredInputs: [
@@ -430,10 +476,6 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({
               name: 'Content',
               description: 'Text to be converted to speech',
               type: 'Text',
-              // selectedInput: {
-              //   name: 'REVIEW',
-              //   parentComponent: 'Description → Roast 🔥',
-              // },
             },
             {
               requiredInputId: '125',
@@ -452,6 +494,7 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({
       finalOutput: {
         name: 'GORDON RAMSAY ROAST AUDIO',
         model: 'ELEVENLABS',
+        generationType: 'Full',
       },
       isMainFlow: true,
     };
@@ -601,7 +644,7 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({
     //   },
     //   {
     //     id: 'flow2',
-    //     name: 'Description → Roast 🔥',
+    //     name: 'Description  Roast 🔥',
     //     description:
     //       'This prompt takes the description that was generated from the image and turns it into',
     //     inputs: [

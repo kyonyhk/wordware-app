@@ -1,20 +1,12 @@
 'use client';
 
-import {
-  useState,
-  createContext,
-  useContext,
-  ReactNode,
-  useCallback,
-  cloneElement,
-} from 'react';
+import { useState, createContext, useContext, ReactNode } from 'react';
 import { useFlowContext } from './FlowContext';
 import { useOutputContext } from './OutputContext';
-import { FlowSection, PromptSection } from '@/components/molecules';
-import { FlowType } from 'typescript';
+import { PromptSection, FlowSection } from '@/components/molecules';
+import { Flow as FlowType } from '../components/organisms/Flow';
 
 interface InstructionContextType {
-  children: ReactNode;
   isAddInstructionModalOpen: boolean;
   isAddFlowModalOpen: boolean;
   availableFlows: Array<{
@@ -29,8 +21,9 @@ interface InstructionContextType {
   handleSaveFlowComponent: (type: string, content: string) => void;
   handlePromptClick: () => void;
   handleSubFlowClick: () => void;
-  handleAddSubFlow: (flowName: string, flowDescription: string) => void;
-  showSubFlowOptions: string;
+  handleAddSubFlow: (flowId: string) => void;
+  showSubFlowOptions: boolean;
+  setShowSubFlowOptions: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const InstructionContext = createContext<InstructionContextType | undefined>(
@@ -48,7 +41,7 @@ export const useInstructionContext = () => {
   return context;
 };
 
-export const InstructionProvider: React.FC<InstructionContextType> = ({
+export const InstructionProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   // CONTEXT IMPORT
@@ -89,20 +82,41 @@ export const InstructionProvider: React.FC<InstructionContextType> = ({
   };
 
   const handleSaveFlowComponent = (type: string, content: string) => {
-    setFlows((prevFlows) => {
+    setFlows((prevFlows: FlowType[]) => {
       const updatedFlows = prevFlows.map((flow) => {
         if (flow.id === currentFlowId) {
           const newComponent = {
             id: `${type}${flow.components.length + 1}`,
             type: type,
+            name: content,
+            description: '',
             component:
               type === 'prompt' ? (
-                <PromptSection isActive={false} />
+                <PromptSection
+                  isActive={false}
+                  isFocused={false}
+                  componentId={`${type}${flow.components.length + 1}`}
+                  onDelete={() => {}}
+                  onFocus={() => {}}
+                />
               ) : (
-                <FlowSection isActive={false} />
+                <FlowSection
+                  isActive={false}
+                  isFocused={false}
+                  onDelete={() => {}}
+                  onFocus={() => {}}
+                  component={{
+                    id: `${type}${flow.components.length + 1}`,
+                    type: type,
+                    name: content,
+                    description: '',
+                    requiredInputs: [],
+                    output: undefined,
+                  }}
+                />
               ),
-            requiredInputs: {},
-            output: {},
+            requiredInputs: [],
+            output: undefined,
           };
           return {
             ...flow,
@@ -129,7 +143,7 @@ export const InstructionProvider: React.FC<InstructionContextType> = ({
     const selectedFlow = availableFlows.find((flow) => flow.id === flowId);
     if (!selectedFlow) return;
 
-    setFlows((prevFlows) =>
+    setFlows((prevFlows: FlowType[]) =>
       prevFlows.map((flow) => {
         if (flow.id === currentFlowId) {
           const newComponent = {
@@ -140,16 +154,23 @@ export const InstructionProvider: React.FC<InstructionContextType> = ({
             component: (
               <FlowSection
                 isActive={false}
-                subFlowName={selectedFlow.description}
-                subFlowDescription={selectedFlow.description}
-                requiredInputs={
-                  selectedFlow.components[0]?.requiredInputs || []
-                }
-                outputName={selectedFlow.outputName || ''}
-                outputModel={selectedFlow.outputName || ''}
+                isFocused={false}
+                onDelete={() => {}}
+                onFocus={() => {}}
+                component={{
+                  id: `flow-${Date.now()}`,
+                  type: 'flow',
+                  name: selectedFlow.description,
+                  description: selectedFlow.description,
+                  requiredInputs: [],
+                  output: {
+                    name: selectedFlow.outputName || '',
+                    model: selectedFlow.outputName || '',
+                  },
+                }}
               />
             ),
-            requiredInputs: selectedFlow.components[0]?.requiredInputs || [],
+            requiredInputs: [],
             output: {
               name: selectedFlow.outputName || '',
               model: selectedFlow.outputName || '',
@@ -166,7 +187,7 @@ export const InstructionProvider: React.FC<InstructionContextType> = ({
     closeAddInstructionModal();
   };
 
-  const value = {
+  const value: InstructionContextType = {
     isAddInstructionModalOpen,
     isAddFlowModalOpen,
     availableFlows,

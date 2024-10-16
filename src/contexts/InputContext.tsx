@@ -10,8 +10,15 @@ import {
 } from 'react';
 import { useFlowContext } from './FlowContext';
 import { Flow as FlowType } from '../components/organisms';
-import { RequiredInput } from '../components/atoms/inputs';
+import { RequiredInput as RequiredInputComponent } from '../components/atoms/inputs';
 import { v4 as uuidv4 } from 'uuid'; // Make sure to import uuid
+
+// Add this type definition
+type RequiredInput = {
+  name: string;
+  description: string;
+  type: string;
+};
 
 interface PromptContent {
   id: string;

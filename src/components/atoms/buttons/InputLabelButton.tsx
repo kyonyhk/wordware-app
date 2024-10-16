@@ -100,7 +100,7 @@ export function InputLabelButton({
         >
           <IconButton
             icon={<Cancel width={16} height={16} />}
-            onClick={(e) => {
+            onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
               e.stopPropagation();
               onDelete();
             }}

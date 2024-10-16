@@ -19,7 +19,11 @@ interface AddFlowModalProps {
   }>;
 }
 
-export function AddFlowModal({ onClose, availableFlows }: AddFlowModalProps) {
+export function AddFlowModal({
+  onClose,
+  onSubFlowSelect,
+  availableFlows,
+}: AddFlowModalProps) {
   const { handleAddSubFlow } = useInstructionContext();
 
   useEffect(() => {

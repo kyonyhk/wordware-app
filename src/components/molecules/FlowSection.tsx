@@ -210,7 +210,7 @@ export function FlowSection({
       componentType: 'flow',
       onConfirm: () => {
         console.log('Deleting FlowSection with ID:', component.id);
-        deleteComponent(component.id);
+        deleteComponent(currentFlow?.id || '', component.id);
       },
       onCancel: () => {
         console.log('Deletion cancelled');
@@ -255,8 +255,6 @@ export function FlowSection({
           icon={<Delete width={16} height={16} />}
           buttonText="DELETE"
           onClick={onDelete}
-          // Add this line to check if the click event is firing
-          onMouseDown={() => console.log('Delete button clicked')}
         />
       </div>
       <div
@@ -402,10 +400,7 @@ export function FlowSection({
                   >
                     <SelectInputDropdown
                       outputs={allOutputs}
-                      onClose={(e) => {
-                        e.stopPropagation();
-                        setOpenSelectInputDropdownId(null);
-                      }}
+                      onClose={() => setOpenSelectInputDropdownId(null)}
                       onSelect={(selectedOutput) =>
                         handleSelectInput(selectedOutput, input.requiredInputId)
                       }

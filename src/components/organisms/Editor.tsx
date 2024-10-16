@@ -134,7 +134,7 @@ const Editor = forwardRef<EditorRef, EditorProps>(
       };
 
       const observerCallback: IntersectionObserverCallback = (entries) => {
-        let maxVisibleSection: VisibleSection | null = null;
+        let maxVisibleSection: { id: string; ratio: number } | null = null;
 
         entries.forEach((entry) => {
           const sectionId = entry.target.id.replace('component-', '');
@@ -362,7 +362,14 @@ const Editor = forwardRef<EditorRef, EditorProps>(
                         />
                       ) : component.type === 'flow' ? (
                         <MemoizedFlowSection
-                          component={component}
+                          component={{
+                            ...component,
+                            output: component.output || {
+                              name: '',
+                              model: '',
+                              generationType: '',
+                            },
+                          }}
                           isActive={activeSection.id === component.id}
                           isFocused={focusedSection.id === component.id}
                           onDelete={() => handleDeleteComponent(component.id)}

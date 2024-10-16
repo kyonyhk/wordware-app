@@ -1,8 +1,9 @@
 import { css } from '../../../../styled-system/css';
+import React from 'react';
 
 interface IconButtonProps {
   icon: React.ReactNode;
-  onClick: () => void;
+  onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 const iconButtonStyles = css({

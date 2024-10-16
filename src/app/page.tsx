@@ -48,11 +48,16 @@ export default function Home() {
     handleSaveFlowComponent,
   } = useInstructionContext();
 
-  const { flows, setFlows, currentFlowId, currentFlow, activeSection } =
-    useFlowContext();
+  const {
+    flows,
+    setFlows,
+    currentFlowId,
+    currentFlow,
+    activeSection,
+    handleActiveSectionChange,
+  } = useFlowContext();
 
-  const { handleActiveSectionChange, handleSectionClick } =
-    useSectionChangeContext();
+  const { handleSectionClick } = useSectionChangeContext();
 
   const {
     isConfirmationModalOpen,
@@ -137,8 +142,8 @@ export default function Home() {
               />
             </div>
             <ProjectOverview
-              activeSection={activeSection}
               onSectionClick={handleSectionClick}
+              activeSection={activeSection}
               currentFlow={currentFlow || { components: [] }}
             />
           </div>

@@ -54,7 +54,7 @@ export function AddGenerationModal() {
 
   const handleDelete = () => {
     if (currentFlow && focusedSection.id) {
-      handleDeleteGeneration(currentFlow.id, focusedSection.id);
+      handleDeleteGeneration();
     } else {
       console.error('No focused section or current flow');
     }

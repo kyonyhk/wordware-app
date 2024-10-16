@@ -114,7 +114,7 @@ export function PromptSection({
 
   const handleOpenAddGenerationModal = () => {
     onFocus();
-    openAddGenerationModal(promptOutput);
+    openAddGenerationModal();
   };
 
   useEffect(() => {
@@ -209,10 +209,10 @@ export function PromptSection({
           <div key={content.id}>
             {content.type === 'text' && (
               <TextArea
-                ref={(el) => {
+                ref={(el: HTMLTextAreaElement | null) => {
                   setTextAreaRef(componentId, index)(el);
                   if (index === currentPromptContents.length - 1) {
-                    lastTextAreaRef.current = el;
+                    lastTextAreaRef.current = el as unknown as HTMLDivElement;
                   }
                 }}
                 initialContent={content.content}
@@ -228,7 +228,6 @@ export function PromptSection({
                 onKeyDown={(event) =>
                   handleLocalKeyDown(event, content.id, index)
                 }
-                placeholder={index === 0 ? 'Type your prompt here...' : ''}
               />
             )}
           </div>
@@ -305,7 +304,6 @@ export function PromptSection({
               outputLabel={promptOutput.label || ''}
               outputModel={promptOutput.model?.toUpperCase() || ''}
               onClick={handleOpenAddGenerationModal}
-              isActive={isFocused}
             />
           ) : (
             <AddBlockButton onClick={handleOpenAddGenerationModal}>

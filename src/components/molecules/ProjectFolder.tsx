@@ -8,6 +8,7 @@ import { IconButton, PrimaryButton } from '../atoms/buttons';
 import { useFlowContext } from '@/contexts/FlowContext';
 import { useProjectContext } from '@/contexts/ProjectContext';
 import { useConfirmationModalContext } from '@/contexts/ConfirmationModalContext';
+import { Flow as FlowType } from '@/components/organisms/Flow';
 
 interface ProjectFolderProps {
   isMainFlow: boolean;
@@ -225,31 +226,34 @@ export function ProjectFolder({ isMainFlow }: ProjectFolderProps) {
           flow.name
         )}
       </PrimaryButton>
-      <IconButton
-        icon={
-          <Cancel
-            width={16}
-            height={16}
-            color="red.100"
-            className={css({
-              color: 'text.primary',
-              opacity: 0.5,
-              _hover: {
-                color: 'red.100',
-                scale: 1.2,
-                opacity: 1.0,
-              },
-              cursor: 'pointer',
-            })}
-          />
-        }
-        onClick={() => handleDeleteFlow(flow.id, flow.isMainFlow)}
+      <div
         className={
           css({
             flexShrink: 0,
           }) + ' cancel-button'
         }
-      />
+      >
+        <IconButton
+          icon={
+            <Cancel
+              width={16}
+              height={16}
+              color="red.100"
+              className={css({
+                color: 'text.primary',
+                opacity: 0.5,
+                _hover: {
+                  color: 'red.100',
+                  scale: 1.2,
+                  opacity: 1.0,
+                },
+                cursor: 'pointer',
+              })}
+            />
+          }
+          onClick={() => handleDeleteFlow(flow.id, flow.isMainFlow)}
+        />
+      </div>
     </div>
   );
 

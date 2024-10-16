@@ -81,7 +81,9 @@ export function RequiredInputButton({
         >
           <IconButton
             icon={<Cancel width={16} height={16} />}
-            onClick={handleDelete}
+            onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
+              handleDelete(e)
+            }
           />
         </div>
       )}
