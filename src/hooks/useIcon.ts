@@ -10,16 +10,13 @@ interface UseIconProps {
 export const useIcon = ({
   width = 16,
   height = 16,
-  color = 'primary.text',
+  color = 'text.primary',
 }: UseIconProps) => {
   return useMemo(() => {
     const scaleFactor = Math.max(width, height) / 16;
     const viewBoxWidth = 16 * scaleFactor;
     const viewBoxHeight = 16 * scaleFactor;
-
-    const iconStyles = css({
-      color: color,
-    });
+    const iconStyles = css({});
 
     return {
       width,
@@ -27,6 +24,7 @@ export const useIcon = ({
       viewBox: `0 0 ${viewBoxWidth} ${viewBoxHeight}`,
       scaleFactor,
       iconStyles,
+      color,
     };
   }, [width, height, color]);
 };
