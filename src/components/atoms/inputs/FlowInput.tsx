@@ -106,7 +106,7 @@ export function FlowInput({
               <RequiredInput
                 key={index}
                 subFlowRequiredInput={input.name}
-                subFlowRequiredInputType={input.type}
+                subFlowRequiredType={input.type}
               />
             ))}
           </div>
