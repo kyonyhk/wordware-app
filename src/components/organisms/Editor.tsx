@@ -21,13 +21,13 @@ import {
 } from '../molecules';
 import { ArrowDown, Plus } from '../atoms/icons';
 import { Flow as FlowType } from './Flow';
-import { useSectionChangeContext } from '@/contexts/SectionChangeContext';
 import { useInputContext } from '@/contexts/InputContext';
 import { useInstructionContext } from '@/contexts/InstructionContext';
 import { useOutputContext } from '@/contexts/OutputContext';
 import { useFlowContext } from '@/contexts/FlowContext';
 import { useConfirmationModalContext } from '@/contexts/ConfirmationModalContext';
 import { PrimaryButton } from '../atoms/buttons';
+import { RiveLoader } from '../atoms/rive/RiveLoader';
 
 export interface EditorRef {
   scrollToSection: (sectionId: string) => void;
@@ -58,30 +58,20 @@ const MemoizedFlowSection = React.memo(FlowSection);
 
 const LoadingComponent = () => (
   <div
-    className={css({ paddingTop: '16px', paddingBottom: '40px', h: '100%' })}
+    className={css({
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '100%',
+      width: '100%',
+    })}
   >
-    <div
+    <RiveLoader
       className={css({
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100%',
-        width: '100%',
-        backgroundColor: 'rgba(0, 0, 0, 0.1)',
-        backdropBlur: '8px',
-        border: '1px solid',
-        borderColor: 'scheme1.border',
-        borderRadius: '8px',
+        width: '200px',
+        height: '200px',
       })}
-    >
-      <div
-        className={css({
-          textStyle: 'heading4',
-        })}
-      >
-        Loading...
-      </div>
-    </div>
+    />
   </div>
 );
 
@@ -277,7 +267,7 @@ const Editor = forwardRef<EditorRef, EditorProps>(
     useEffect(() => {
       const timer = setTimeout(() => {
         setIsLoading(false);
-      }, 3000);
+      }, 5000);
 
       return () => clearTimeout(timer);
     }, []);
