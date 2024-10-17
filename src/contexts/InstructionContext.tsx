@@ -111,7 +111,7 @@ export const InstructionProvider: React.FC<{ children: ReactNode }> = ({
                     name: content,
                     description: '',
                     requiredInputs: [],
-                    output: undefined,
+                    output: {},
                   }}
                 />
               ),
