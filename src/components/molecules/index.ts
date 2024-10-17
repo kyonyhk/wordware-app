@@ -1,6 +1,5 @@
 export * from './ProjectName';
 export * from './FlowDetails';
-export * from './InstructionDetails';
 export * from './PromptOne';
 export * from './PromptSection';
 export * from './FlowSection';
