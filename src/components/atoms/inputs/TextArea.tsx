@@ -11,10 +11,10 @@ import { css } from '../../../../styled-system/css';
 interface TextAreaProps {
   initialContent?: string | string[];
   onChange?: (content: string[]) => void;
-  onKeyDown?: (event: KeyboardEvent<HTMLDivElement>) => void;
+  onKeyDown?: (event: KeyboardEvent<HTMLTextAreaElement>) => void;
 }
 
-export const TextArea = forwardRef<HTMLDivElement, TextAreaProps>(
+export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
   ({ initialContent = [''], onChange, onKeyDown }, ref) => {
     const [content, setContent] = useState(() => {
       if (typeof initialContent === 'string') {
@@ -23,23 +23,22 @@ export const TextArea = forwardRef<HTMLDivElement, TextAreaProps>(
       return Array.isArray(initialContent) ? initialContent.join('\n') : '';
     });
 
-    const innerRef = useRef<HTMLDivElement | null>(null);
+    const innerRef = useRef<HTMLTextAreaElement | null>(null);
 
     const handleChange = () => {
-      const newContent = innerRef.current?.innerText || '';
+      const newContent = innerRef.current?.value || '';
       setContent(newContent);
       onChange?.(newContent.split('\n'));
     };
 
-    const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    const handleKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
       console.log('TextArea keydown:', event.key);
       if (event.key === 'Enter' && !event.shiftKey) {
         event.preventDefault();
         onKeyDown?.(event);
       } else if (event.key === 'Enter' && event.shiftKey) {
         // Allow Shift+Enter to create a new line
-        document.execCommand('insertLineBreak');
-        handleChange();
+        return;
       } else {
         onKeyDown?.(event);
       }
@@ -47,23 +46,22 @@ export const TextArea = forwardRef<HTMLDivElement, TextAreaProps>(
 
     useEffect(() => {
       if (innerRef.current) {
-        innerRef.current.innerText = content;
+        innerRef.current.value = content;
       }
     }, []);
 
     return (
-      <div
+      <textarea
         ref={(el) => {
           innerRef.current = el;
           if (typeof ref === 'function') {
             ref(el);
           } else if (ref) {
-            (ref as React.MutableRefObject<HTMLDivElement | null>).current = el;
+            ref.current = el;
           }
         }}
-        contentEditable
-        suppressContentEditableWarning
-        onInput={handleChange}
+        value={content}
+        onChange={handleChange}
         onKeyDown={handleKeyDown}
         className={css({
           w: '100%',
@@ -77,14 +75,18 @@ export const TextArea = forwardRef<HTMLDivElement, TextAreaProps>(
           wordBreak: 'break-word',
           outline: 'none',
           cursor: 'text !important',
-          '&:empty:before': {
-            content: 'attr(data-placeholder)',
+          border: 'none',
+          resize: 'none',
+          background: 'transparent',
+          '&::placeholder': {
             color: 'text.secondary',
             opacity: 0.2,
           },
         })}
-        data-placeholder="Press / or type a prompt here"
+        placeholder="Press / or type a prompt here"
       />
     );
   }
 );
+
+TextArea.displayName = 'TextArea';

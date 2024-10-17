@@ -4,33 +4,41 @@ import { css } from '../../../styled-system/css';
 interface OutputProps {
   finalOutputName: string;
   finalOutputModel: string;
-  updateFinalOutput: (name: string, model: string) => void;
   isActive: boolean;
 }
 
 export function Output({
   finalOutputName,
   finalOutputModel,
-  updateFinalOutput,
   isActive,
 }: OutputProps) {
-  const [localOutputName, setLocalOutputName] = useState(finalOutputName);
-  const [localOutputModel, setLocalOutputModel] = useState(finalOutputModel);
+  // const [localOutputName, setLocalOutputName] = useState(finalOutputName);
+  // const [localOutputModel, setLocalOutputModel] = useState(finalOutputModel);
+  // const [localGenerationType, setLocalGenerationType] = useState(
+  //   finalOutputGenerationType
+  // );
+  // useEffect(() => {
+  //   setLocalOutputName(finalOutputName);
+  //   setLocalOutputModel(finalOutputModel);
+  //   setLocalOutputModel(finalOutputGenerationType);
+  // }, [finalOutputName, finalOutputModel, finalOutputGenerationType]);
 
-  useEffect(() => {
-    setLocalOutputName(finalOutputName);
-    setLocalOutputModel(finalOutputModel);
-  }, [finalOutputName, finalOutputModel]);
+  // const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setLocalOutputName(e.target.value);
+  //   updateFinalOutput(e.target.value, localOutputModel, localGenerationType);
+  // };
 
-  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLocalOutputName(e.target.value);
-    updateFinalOutput(e.target.value, localOutputModel);
-  };
+  // const handleModelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setLocalOutputModel(e.target.value);
+  //   updateFinalOutput(localOutputName, e.target.value, localGenerationType);
+  // };
 
-  const handleModelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLocalOutputModel(e.target.value);
-    updateFinalOutput(localOutputName, e.target.value);
-  };
+  // const handleGenerationTypeChange = (
+  //   e: React.ChangeEvent<HTMLInputElement>
+  // ) => {
+  //   setLocalGenerationType(e.target.value);
+  //   updateFinalOutput(localOutputName, localOutputModel, e.target.value);
+  // };
 
   return (
     <div

@@ -34,7 +34,13 @@ interface FlowContextType {
   createNewFlow: (isMainFlow: boolean) => void;
   handleInputEdit: (flowId: string, inputIndex: number) => void;
   handleActiveSectionChange: (sectionId: string, sectionType: string) => void;
-  updateFinalOutput: (flowId: string, name: string, model: string) => void;
+  updateFinalOutput: (
+    flowId: string,
+    name: string,
+    model: string,
+    generationType?: string,
+    label?: string
+  ) => void;
   setFocusedSection: (sectionId: string, sectionType: string) => void;
   deleteComponent: (flowId: string, componentId: string) => void;
   deleteFlow: (flowId: string) => void;
@@ -190,13 +196,19 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({
   );
 
   const updateFinalOutput = useCallback(
-    (flowId: string, name: string, model: string) => {
+    (
+      flowId: string,
+      name: string,
+      model: string,
+      generationType?: string, // Make generationType optional here
+      label?: string
+    ) => {
       setFlows((prevFlows) =>
         prevFlows.map((flow) => {
           if (flow.id === flowId) {
             return {
               ...flow,
-              finalOutput: { name, model },
+              finalOutput: { name, model, generationType, label },
             };
           }
           return flow;
@@ -320,7 +332,7 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({
                     name: flowData.name,
                     description: flowData.description,
                     requiredInputs: flowData.requiredInputs,
-                    output: (flowData.finalOutput as OutputType) || {},
+                    output: flowData.output || {},
                   }}
                 />
               ),

@@ -28,7 +28,7 @@ interface OutputContextType {
     label: string,
     model: string
   ) => void;
-  handleDeleteGeneration: () => void;
+  handleDeleteGeneration: (flowId: string, componentId: string) => void;
   updateFinalOutput: (
     flowId: string,
     name: string,

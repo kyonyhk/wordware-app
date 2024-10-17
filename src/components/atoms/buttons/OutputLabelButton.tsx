@@ -56,7 +56,6 @@ export function OutputLabelButton({
     <Component
       className={`${baseStyles} ${className || ''}`}
       disabled={disabled}
-      onClick={disableHover ? undefined : onClick}
     >
       <div
         className={css({
@@ -82,7 +81,7 @@ export function OutputLabelButton({
               opacity: 0.8,
             })}
           >
-            {outputName}
+            {outputName.toUpperCase()}
           </div>
         </div>
         <div
@@ -119,7 +118,7 @@ export function OutputLabelButton({
                 display: outputModel ? 'inline' : 'none',
               })}
             >
-              {outputModel}
+              {outputModel.toUpperCase()}
             </span>
             <span
               className={css({

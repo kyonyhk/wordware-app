@@ -9,11 +9,23 @@ import { useInstructionContext } from '@/contexts/InstructionContext';
 
 interface ProjectOverviewProps {
   onSectionClick: (sectionId: string, sectionType: string) => void;
+  activeSection: { id: string; type: string };
+  currentFlow: {
+    components: Array<{
+      id: string;
+      type: string;
+      // Add other properties as needed
+    }>;
+  };
 }
 
-export function ProjectOverview({ onSectionClick }: ProjectOverviewProps) {
-  const { activeSection, currentFlow } = useFlowContext();
+export function ProjectOverview({
+  onSectionClick,
+  activeSection,
+  currentFlow,
+}: ProjectOverviewProps) {
   const { openAddInstructionModal } = useInstructionContext();
+  // const { activeSection, currentFlow } = useFlowContext();
   const [components, setComponents] = useState(currentFlow?.components || []);
 
   useEffect(() => {

@@ -11,6 +11,7 @@ import {
 } from '@/components/atoms/inputs';
 import { useOutputContext } from '@/contexts/OutputContext';
 import { useFlowContext } from '@/contexts/FlowContext';
+import { useModalClose } from '@/hooks';
 
 export function AddGenerationModal() {
   const {
@@ -18,6 +19,7 @@ export function AddGenerationModal() {
     handleDeleteGeneration,
     closeAddGenerationModal,
     currentEditingOutput,
+    isAddGenerationModalOpen,
   } = useOutputContext();
 
   const { currentFlow, focusedSection } = useFlowContext();
@@ -54,7 +56,14 @@ export function AddGenerationModal() {
 
   const handleDelete = () => {
     if (currentFlow && focusedSection.id) {
-      handleDeleteGeneration();
+      const component = currentFlow.components.find(
+        (c) => c.id === focusedSection.id
+      );
+      if (component) {
+        handleDeleteGeneration(focusedSection.id, component.id);
+      } else {
+        console.error('Component not found');
+      }
     } else {
       console.error('No focused section or current flow');
     }
@@ -66,8 +75,14 @@ export function AddGenerationModal() {
   const hasOutput = name || generationType || label || model;
   const isEditing = !!currentEditingOutput;
 
+  const modalRef = useModalClose({
+    isOpen: isAddGenerationModalOpen,
+    onClose: closeAddGenerationModal,
+  });
+
   return (
     <div
+      ref={modalRef}
       className={css({
         display: 'flex',
         flexDirection: 'column',

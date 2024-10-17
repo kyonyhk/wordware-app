@@ -45,10 +45,10 @@ interface EditorProps {
   onActiveSectionChange: (sectionId: string, sectionType: string) => void;
 }
 
-interface VisibleSection {
+type VisibleSection = {
   id: string;
   ratio: number;
-}
+};
 
 type SectionRefs = {
   [key: string]: React.RefObject<HTMLDivElement>;
@@ -84,6 +84,10 @@ const LoadingComponent = () => (
     </div>
   </div>
 );
+
+function isVisibleSection(obj: any): obj is VisibleSection {
+  return obj && typeof obj === 'object' && 'id' in obj && 'ratio' in obj;
+}
 
 const Editor = forwardRef<EditorRef, EditorProps>(
   ({ flows = [], currentFlowId }, ref) => {
@@ -134,7 +138,7 @@ const Editor = forwardRef<EditorRef, EditorProps>(
       };
 
       const observerCallback: IntersectionObserverCallback = (entries) => {
-        let maxVisibleSection: { id: string; ratio: number } | null = null;
+        let maxVisibleSection: VisibleSection | null | undefined = null;
 
         entries.forEach((entry) => {
           const sectionId = entry.target.id.replace('component-', '');
@@ -150,16 +154,19 @@ const Editor = forwardRef<EditorRef, EditorProps>(
           }
         });
 
-        if (maxVisibleSection && maxVisibleSection.ratio >= 0.3) {
-          const sectionType =
-            maxVisibleSection.id === 'flowDetails'
-              ? 'flowDetails'
-              : maxVisibleSection.id === 'output'
-                ? 'output'
-                : currentFlow?.components.find(
-                    (c) => c.id === maxVisibleSection?.id
-                  )?.type || '';
-          handleActiveSectionChange(maxVisibleSection.id, sectionType);
+        if (maxVisibleSection) {
+          const visibleSection = maxVisibleSection as VisibleSection;
+          if (isVisibleSection(visibleSection) && visibleSection.ratio >= 0.3) {
+            const sectionType =
+              visibleSection.id === 'flowDetails'
+                ? 'flowDetails'
+                : visibleSection.id === 'output'
+                  ? 'output'
+                  : currentFlow?.components.find(
+                      (c) => c.id === visibleSection.id
+                    )?.type || '';
+            handleActiveSectionChange(visibleSection.id, sectionType);
+          }
         }
       };
 
@@ -220,7 +227,7 @@ const Editor = forwardRef<EditorRef, EditorProps>(
             const tl = gsap.timeline({
               onComplete: () => {
                 deleteComponent(currentFlowId, componentId);
-                setFocusedSection({ id: '', type: '' });
+                setFocusedSection('', '');
               },
             });
 
@@ -258,7 +265,7 @@ const Editor = forwardRef<EditorRef, EditorProps>(
             );
           } else {
             deleteComponent(currentFlowId, componentId);
-            setFocusedSection({ id: '', type: '' });
+            setFocusedSection('', '');
           }
         },
         onCancel: () => {
@@ -366,8 +373,11 @@ const Editor = forwardRef<EditorRef, EditorProps>(
                             ...component,
                             output: component.output || {
                               name: '',
+                              label: '',
+                              type: '',
                               model: '',
                               generationType: '',
+                              parentComponent: '',
                             },
                           }}
                           isActive={activeSection.id === component.id}
@@ -427,9 +437,6 @@ const Editor = forwardRef<EditorRef, EditorProps>(
                     isActive={activeSection.id === 'output'}
                     finalOutputName={currentFlow.finalOutput.name || ''}
                     finalOutputModel={currentFlow.finalOutput.model || ''}
-                    updateFinalOutput={(name, model) =>
-                      updateFinalOutput(currentFlowId, name, model)
-                    }
                   />
                 ) : (
                   <div
@@ -512,7 +519,7 @@ const Editor = forwardRef<EditorRef, EditorProps>(
                     textStyle: 'heading4',
                   })}
                 >
-                  READY TO CREATE PROGRAMS?
+                  READY TO CREATE AI PROGRAMS?
                 </div>
                 <div
                   className={css({

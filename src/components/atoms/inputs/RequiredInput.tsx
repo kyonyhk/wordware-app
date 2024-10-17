@@ -17,6 +17,7 @@ export function RequiredInput({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
+        gap: '4px',
         textStyle: 'heading4',
         border: '1px solid',
         borderColor: 'scheme1.border',

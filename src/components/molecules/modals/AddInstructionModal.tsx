@@ -1,13 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { css } from '../../../../styled-system/css';
-import { IconButton, PrimaryButton } from '@/components/atoms/buttons';
+import { IconButton } from '@/components/atoms/buttons';
 import { ArrowRight, Plus } from '@/components/atoms/icons';
 import { FlowInput, InstructionInput } from '@/components/atoms/inputs';
 import { ModalHeading } from '@/components/atoms/modals';
 import { useInstructionContext } from '@/contexts/InstructionContext';
 import { useFlowContext } from '@/contexts/FlowContext';
+import { useModalClose } from '@/hooks';
 
 export function AddInstructionModal() {
+  // CONTEXT
   const {
     handlePromptClick,
     closeAddInstructionModal,
@@ -19,12 +21,14 @@ export function AddInstructionModal() {
 
   const { flows, currentFlowId, addFlowSection } = useFlowContext();
 
+  // USE EFFECTS
   useEffect(() => {
     if (isAddInstructionModalOpen) {
       setShowSubFlowOptions(false);
     }
   }, [isAddInstructionModalOpen, setShowSubFlowOptions]);
 
+  // FUNCTIONS
   const handleClose = () => {
     setShowSubFlowOptions(false);
     closeAddInstructionModal();
@@ -46,8 +50,15 @@ export function AddInstructionModal() {
     closeAddInstructionModal();
   };
 
+  // MODAL CLOSE REF
+  const modalRef = useModalClose({
+    isOpen: isAddInstructionModalOpen,
+    onClose: handleClose,
+  });
+
   return (
     <div
+      ref={modalRef}
       className={css({
         display: 'flex',
         flexDirection: 'column',

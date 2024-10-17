@@ -36,9 +36,13 @@ interface FlowSectionProps {
         model?: string;
       };
     }>;
-    output?: {
-      name: string;
-      model: string;
+    output: {
+      name?: string;
+      type?: string;
+      label?: string;
+      model?: string;
+      generationType?: string;
+      parentComponent?: string;
     };
   };
   isActive: boolean;

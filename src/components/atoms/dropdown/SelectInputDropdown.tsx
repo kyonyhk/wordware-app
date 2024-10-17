@@ -3,7 +3,8 @@ import { css } from '../../../../styled-system/css';
 import { Image, Text, File, Audio, LongText, Plus, Cancel } from '../icons';
 import { IconButton } from '../buttons';
 import { DropdownCell } from '../dropdown';
-import { Divider } from '../divider';
+import { useFlowSectionContext } from '@/contexts/FlowSectionContext';
+import { useDropdownClose } from '@/hooks';
 
 interface Output {
   name: string;
@@ -23,7 +24,11 @@ export function SelectInputDropdown({
   onClose,
   onSelect,
 }: SelectInputDropdownProps) {
-  // Icon function
+  // CONTEXT
+  const { openSelectInputDropdownId, setOpenSelectInputDropdownId } =
+    useFlowSectionContext();
+
+  // ICON FUNCTION
   const processInputType = (type: string) => {
     return type.replace('TYPE - ', '').trim().toUpperCase();
   };
@@ -50,8 +55,14 @@ export function SelectInputDropdown({
   // Icon Color
   const iconColor = '#e0e0e0';
 
+  const dropdownRef = useDropdownClose({
+    isOpen: openSelectInputDropdownId,
+    onClose: () => setOpenSelectInputDropdownId(null),
+  });
+
   return (
     <div
+      ref={dropdownRef}
       className={css({
         display: 'flex',
         flexDirection: 'column',
@@ -110,7 +121,19 @@ export function SelectInputDropdown({
               </div>
             ))
           ) : (
-            <div>No outputs available</div>
+            <div
+              className={css({
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                h: '80px',
+              })}
+            >
+              <div className={css({ textStyle: 'body5', opacity: 0.2 })}>
+                No inputs available
+              </div>
+            </div>
           )}
         </div>
       </div>

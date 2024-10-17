@@ -38,6 +38,7 @@ export interface Flow {
   finalOutput: {
     name?: string;
     model?: string;
+    generationType?: string;
   };
   isMainFlow: boolean;
 }

@@ -7,6 +7,7 @@ import { IconButton } from '../buttons';
 import { useInputContext } from '../../../contexts/InputContext';
 import { useFlowContext } from '@/contexts/FlowContext';
 import { usePromptSectionContext } from '@/contexts/PromptSectionContext';
+import { useDropdownClose } from '@/hooks';
 
 interface InputDropdownProps {
   componentId: string;
@@ -27,7 +28,7 @@ export function InputDropdown({
   const { openInputModal, setIsInputModalOpenFromPromptSection } =
     useInputContext();
 
-  const { closeInputDropdown } = usePromptSectionContext();
+  const { closeInputDropdown, isDropdownOpen } = usePromptSectionContext();
 
   const { currentFlow } = useFlowContext();
   const inputs = currentFlow?.inputs || [];
@@ -71,8 +72,14 @@ export function InputDropdown({
     onInputSelect(input);
   };
 
+  const dropdownRef = useDropdownClose({
+    isOpen: isDropdownOpen,
+    onClose: closeInputDropdown,
+  });
+
   return (
     <div
+      ref={dropdownRef}
       className={css({
         display: 'flex',
         flexDirection: 'column',
@@ -123,40 +130,58 @@ export function InputDropdown({
           INPUT LIST
         </div>
         <div>
-          {inputs.map((input, index) => (
-            <div key={index} onClick={() => handleInputClick(input)}>
-              <DropdownCell
-                icon={getIconForInputType(input.type)}
-                name={input.name}
-                description={input.description}
-              />
+          {inputs.length > 0 ? (
+            <div>
+              {inputs.map((input, index) => (
+                <div key={index} onClick={() => handleInputClick(input)}>
+                  <DropdownCell
+                    icon={getIconForInputType(input.type)}
+                    name={input.name}
+                    description={input.description}
+                  />
+                </div>
+              ))}
             </div>
-          ))}
+          ) : (
+            <div
+              className={css({
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                h: '80px',
+              })}
+            >
+              <div className={css({ textStyle: 'body5', opacity: 0.2 })}>
+                No inputs available
+              </div>
+            </div>
+          )}
         </div>
-      </div>
-      <Divider />
-      <div
-        className={css({
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '8px',
-        })}
-      >
+        <Divider />
         <div
           className={css({
-            textStyle: 'heading5',
-            opacity: 0.5,
-            padding: '0px 8px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '8px',
           })}
         >
-          NEW INPUT
-        </div>
-        <div onClick={handleCreateInput}>
-          <DropdownCell
-            icon={<Plus width={24} height={24} color={iconColor} />}
-            name="CREATE INPUT"
-            description="Add a new input"
-          />
+          <div
+            className={css({
+              textStyle: 'heading5',
+              opacity: 0.5,
+              padding: '0px 8px',
+            })}
+          >
+            NEW INPUT
+          </div>
+          <div onClick={handleCreateInput}>
+            <DropdownCell
+              icon={<Plus width={24} height={24} color={iconColor} />}
+              name="CREATE INPUT"
+              description="Add a new input"
+            />
+          </div>
         </div>
       </div>
     </div>
