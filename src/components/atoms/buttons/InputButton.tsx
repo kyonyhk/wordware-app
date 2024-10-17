@@ -9,9 +9,9 @@ interface InputButtonProps {
   className?: string;
   disabled?: boolean;
   onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
-  name?: string;
-  description?: string;
-  type?: string;
+  name: string;
+  description: string;
+  type: string;
 }
 
 export function InputButton({
