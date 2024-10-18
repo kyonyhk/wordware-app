@@ -23,11 +23,6 @@ export function InputModal({ ...props }: InputModalProps) {
     isInputModalOpenFromPromptSection,
   } = useInputContext();
 
-  console.log(
-    'InputModal rendered, isInputModalOpenFromPromptSection:',
-    isInputModalOpenFromPromptSection
-  );
-
   const [inputName, setInputName] = useState(initialInput?.name || '');
   const [inputDescription, setInputDescription] = useState(
     initialInput?.description || ''
@@ -65,7 +60,6 @@ export function InputModal({ ...props }: InputModalProps) {
   };
 
   const closeModalAndClearInputs = () => {
-    console.log('closeModalAndClearInputs called');
     clearInputs();
     closeInputModal();
   };

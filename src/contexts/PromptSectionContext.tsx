@@ -178,12 +178,6 @@ export const PromptSectionProvider: React.FC<{ children: ReactNode }> = ({
   const toggleDropdown = useCallback((componentId: string) => {
     setIsDropdownOpen((prev) => {
       const newState = prev === componentId ? null : componentId;
-      console.log(
-        'Toggling dropdown for component:',
-        componentId,
-        'New state:',
-        newState
-      );
       return newState;
     });
   }, []);

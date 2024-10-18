@@ -22,8 +22,6 @@ export function InputDropdown({
   componentId,
   onInputSelect,
 }: InputDropdownProps) {
-  console.log('Rendering InputDropdown');
-
   // Context Import
   const { openInputModal, setIsInputModalOpenFromPromptSection } =
     useInputContext();

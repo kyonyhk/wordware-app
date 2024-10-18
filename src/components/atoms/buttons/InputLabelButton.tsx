@@ -46,7 +46,6 @@ export function InputLabelButton({
       case 'LONG TEXT':
         return <LongText width={16} height={16} />;
       default:
-        console.log('getIconForInputType - Unrecognized type:', processedType);
         return <Plus width={16} height={16} />;
     }
   };

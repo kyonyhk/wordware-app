@@ -148,7 +148,6 @@ export const InputProvider: React.FC<{ children: ReactNode }> = ({
   const handleAddInput = useCallback(
     (flowId: string, componentId: string, input: RequiredInput) => {
       setFlows((prevFlows) => {
-        console.log('Previous flows:', prevFlows);
         const updatedFlows = prevFlows.map((flow) => {
           if (flow.id === flowId) {
             const updatedComponents = flow.components.map((component) => {
@@ -172,12 +171,10 @@ export const InputProvider: React.FC<{ children: ReactNode }> = ({
               ...flow,
               components: updatedComponents,
             };
-            console.log('Updated flow:', updatedFlow);
             return updatedFlow;
           }
           return flow;
         });
-        console.log('Updated flows:', updatedFlows);
         return updatedFlows;
       });
     },
@@ -355,11 +352,6 @@ export const InputProvider: React.FC<{ children: ReactNode }> = ({
     setIsDropdownOpen(false);
     setIsInputModalOpenFromPromptSection(false);
   }, [setIsInputModalOpenFromPromptSection]);
-
-  // Add this useEffect hook in your component
-  useEffect(() => {
-    console.log('Flows after update:', flows);
-  }, [flows]);
 
   const deleteRequiredInput = useCallback(
     (componentId: string, requiredInputId: string) => {

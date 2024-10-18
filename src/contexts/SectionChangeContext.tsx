@@ -49,7 +49,6 @@ export const SectionChangeProvider: React.FC<{ children: ReactNode }> = ({
       if (editorRef.current) {
         editorRef.current.scrollToSection(sectionId);
       } else {
-        console.log('Editor ref is not available');
       }
     },
     [editorRef]

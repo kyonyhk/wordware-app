@@ -26,10 +26,6 @@ export function AddFlowModal({
 }: AddFlowModalProps) {
   const { handleAddSubFlow } = useInstructionContext();
 
-  useEffect(() => {
-    console.log('AddFlowModal - availableFlows:', availableFlows);
-  }, [availableFlows]);
-
   return (
     <div
       className={css({

@@ -117,12 +117,7 @@ export function PromptSection({
     openAddGenerationModal();
   };
 
-  useEffect(() => {
-    console.log('isDropdownOpen:', isDropdownOpen);
-  }, [isDropdownOpen]);
-
   const handleAddInputClick = () => {
-    console.log('Add Input button clicked for component:', componentId);
     toggleDropdown(componentId);
   };
 

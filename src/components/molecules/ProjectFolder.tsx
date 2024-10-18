@@ -172,9 +172,7 @@ export function ProjectFolder({ isMainFlow }: ProjectFolderProps) {
           deleteFlow(flowId);
         }
       },
-      onCancel: () => {
-        console.log('Flow deletion cancelled');
-      },
+      onCancel: () => {},
     });
   };
 

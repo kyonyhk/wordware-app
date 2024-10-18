@@ -45,7 +45,6 @@ export function AddInstructionModal() {
       requiredInputs: flow.components[0]?.requiredInputs || [],
       finalOutput: flow.finalOutput,
     };
-    console.log('Flow data being passed to addFlowSection:', flowData);
     addFlowSection(flowData);
     closeAddInstructionModal();
   };

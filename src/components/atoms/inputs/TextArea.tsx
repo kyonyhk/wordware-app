@@ -32,7 +32,6 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
     };
 
     const handleKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
-      console.log('TextArea keydown:', event.key);
       if (event.key === 'Enter' && !event.shiftKey) {
         event.preventDefault();
         onKeyDown?.(event);

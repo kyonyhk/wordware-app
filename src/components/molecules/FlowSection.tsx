@@ -58,9 +58,6 @@ export function FlowSection({
   onDelete,
   onFocus,
 }: FlowSectionProps) {
-  console.log('FlowSection component:', component);
-  console.log('requiredInputs:', component?.requiredInputs);
-
   const {
     currentFlow,
     focusedSection,
@@ -209,23 +206,17 @@ export function FlowSection({
   };
 
   const handleDelete = () => {
-    console.log('handleDelete called');
     openConfirmationModal({
       componentType: 'flow',
       onConfirm: () => {
-        console.log('Deleting FlowSection with ID:', component.id);
         deleteComponent(currentFlow?.id || '', component.id);
       },
-      onCancel: () => {
-        console.log('Deletion cancelled');
-      },
+      onCancel: () => {},
     });
   };
 
   // Add this useEffect to log the current component after each render
-  useEffect(() => {
-    console.log('Current component:', component);
-  }, [component]);
+  useEffect(() => {}, [component]);
 
   return (
     <div

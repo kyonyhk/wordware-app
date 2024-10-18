@@ -258,9 +258,7 @@ const Editor = forwardRef<EditorRef, EditorProps>(
             setFocusedSection('', '');
           }
         },
-        onCancel: () => {
-          console.log('Deletion cancelled');
-        },
+        onCancel: () => {},
       });
     };
 

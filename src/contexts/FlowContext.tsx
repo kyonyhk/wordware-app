@@ -109,10 +109,6 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({
     }
   }, [flows, currentFlowId]);
 
-  useEffect(() => {
-    console.log('Flows state updated:', flows);
-  }, [flows]);
-
   // Functions
   const updateFlowName = useCallback((flowId: string, newName: string) => {
     setFlows((prevFlows) =>
@@ -120,7 +116,6 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({
         flow.id === flowId ? { ...flow, name: newName } : flow
       )
     );
-    console.log('Flow name updated:', newName);
   }, []);
 
   const updateFlowDescription = useCallback(
@@ -135,7 +130,6 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({
             : flow
         )
       );
-      console.log('Flow description updated:', newDescription);
     },
     []
   );
@@ -168,9 +162,7 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({
     };
 
     setFlows((prevFlows) => {
-      console.log('Previous flows:', prevFlows);
       const updatedFlows = [...prevFlows, newFlow];
-      console.log('Updated flows:', updatedFlows);
       return updatedFlows;
     });
 
@@ -186,10 +178,6 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({
 
   const handleFocusedSectionChange = useCallback(
     (sectionId: string, sectionType: string) => {
-      console.log('Changing focused section to:', {
-        id: sectionId,
-        type: sectionType,
-      });
       setFocusedSection({ id: sectionId, type: sectionType });
     },
     []
@@ -276,10 +264,8 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({
 
   const deleteFlow = useCallback(
     (flowId: string) => {
-      console.log('Deleting flow with ID:', flowId);
       setFlows((prevFlows) => {
         const updatedFlows = prevFlows.filter((flow) => flow.id !== flowId);
-        console.log('Flows after deletion:', updatedFlows);
         return updatedFlows;
       });
 
@@ -310,11 +296,9 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({
 
   const addFlowSection = useCallback(
     (flowData: any) => {
-      console.log('Adding new flow section with data:', flowData);
       setFlows((prevFlows) => {
         return prevFlows.map((flow) => {
           if (flow.id === currentFlowId) {
-            console.log('Current flow found:', flow);
             const newFlowSection = {
               id: uuidv4(),
               type: 'flow',
@@ -344,7 +328,6 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({
                 : [],
               output: (flowData.finalOutput as OutputType) || {},
             };
-            console.log('New flow section created:', newFlowSection);
 
             const updatedComponents = [...flow.components, newFlowSection];
             const updatedFlow = {
@@ -352,8 +335,6 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({
               components: updatedComponents,
               finalOutput: newFlowSection.output || flow.finalOutput,
             };
-
-            console.log('Updated flow:', updatedFlow);
             return updatedFlow;
           }
           return flow;
