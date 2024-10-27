@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Analytics } from '@vercel/analytics/react';
 import localFont from 'next/font/local';
 import './globals.css';
 import {
@@ -58,6 +59,7 @@ export default function RootLayout({
                         <InputProvider>
                           <PromptSectionProvider>
                             {children}
+                            <Analytics />
                           </PromptSectionProvider>
                         </InputProvider>
                       </FlowSectionProvider>
